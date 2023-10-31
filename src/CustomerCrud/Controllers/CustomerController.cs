@@ -5,6 +5,16 @@ using CustomerCrud.Repositories;
 
 namespace CustomerCrud.Controllers;
 
-public class CustomerController
+[ApiController]
+[Route("[controller]")]
+
+public class CustomerController : ControllerBase
 {
+
+  private readonly ICustomerRepository _customerRespository;
+
+  public CustomerController(ICustomerRepository customerRepository)
+  {
+    _customerRespository = customerRepository;
+  }
 }
