@@ -6,7 +6,7 @@ using CustomerCrud.Repositories;
 namespace CustomerCrud.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("customers")]
 
 public class CustomerController : ControllerBase
 {
@@ -16,5 +16,12 @@ public class CustomerController : ControllerBase
   public CustomerController(ICustomerRepository customerRepository)
   {
     _customerRespository = customerRepository;
+  }
+
+  [HttpGet]
+  public ActionResult GetAll()
+  {
+    var response = _customerRespository.GetAll();
+    return Ok(response);
   }
 }
