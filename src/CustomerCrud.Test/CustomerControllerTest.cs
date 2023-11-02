@@ -103,7 +103,7 @@ public class CustomersControllerTest : IClassFixture<WebApplicationFactory<Progr
         var content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         content.Should().Be("Customer 1 updated");
         _repositoryMock.Verify(r => r.Update(It.Is<int>(id => id == 1), It.IsAny<object>()), Times.Once);
     }
@@ -111,6 +111,11 @@ public class CustomersControllerTest : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task DeleteTest()
     {
-        throw new NotImplementedException();
+        _repositoryMock.Setup(r => r.Delete(It.Is<int>(id => id == 1))).Returns(true);
+
+        var response = await _client.DeleteAsync("/customers/1");
+        
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        _repositoryMock.Verify(r => r.Delete(It.Is<int>(id => id == 1)), Times.Once);
     }
 }
