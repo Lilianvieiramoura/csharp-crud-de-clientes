@@ -25,7 +25,31 @@ public class CustomersControllerTest : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task GetAllTest()
     {
-        throw new NotImplementedException();
+
+        // Arrange
+        //  Aqui, dados falsos são gerados com o AutoFaker para criar uma lista de 3 objetos do tipo Customer. O AutoFaker é uma biblioteca que gera dados falsos automaticamente para testes unitários.
+        var customers = AutoFaker.Generate<Customer>(3);
+
+        // Um mock do método GetAll() do repositório, configurado usando o _repositoryMock
+        _repositoryMock.Setup(r => r.GetAll()).Returns(customers);
+
+        //Act
+        //Uma chamada GET para a rota "/customers" utilizando o _client
+        var response = await _client.GetAsync("/customers");
+
+        //Assert
+        var content = await response.Content.ReadFromJsonAsync<IEnumerable<Customer>>();
+
+        //verifica que a resposta retornada pela chamada ao cliente é do tipo 200 (Ok)
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        //  response.EnsureSuccessStatusCode();
+
+        //verifica que o conteúdo da resposta é equivalente ao objeto retornado pelo mock
+        content.Should().BeEquivalentTo(customers);
+
+        // verifica que o método mockado foi chamado uma única vez
+        _repositoryMock.Verify(r => r.GetAll(), Times.Once);
+
     }
 
     [Fact]
